@@ -1,0 +1,111 @@
+
+player.png
+size: 386,532
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+back gray
+  rotate: false
+  xy: 2, 56
+  size: 157, 148
+  orig: 157, 148
+  offset: 0, 0
+  index: -1
+bake hair
+  rotate: false
+  xy: 2, 206
+  size: 180, 154
+  orig: 180, 159
+  offset: 0, 5
+  index: -1
+clothes
+  rotate: false
+  xy: 273, 221
+  size: 86, 90
+  orig: 86, 92
+  offset: 0, 0
+  index: -1
+eyes
+  rotate: false
+  xy: 168, 4
+  size: 93, 57
+  orig: 93, 59
+  offset: 0, 0
+  index: -1
+face
+  rotate: true
+  xy: 161, 63
+  size: 135, 100
+  orig: 135, 100
+  offset: 0, 0
+  index: -1
+fashi
+  rotate: true
+  xy: 263, 2
+  size: 70, 56
+  orig: 70, 56
+  offset: 0, 0
+  index: -1
+front black
+  rotate: false
+  xy: 2, 362
+  size: 250, 168
+  orig: 250, 177
+  offset: 0, 0
+  index: -1
+front hair
+  rotate: false
+  xy: 254, 395
+  size: 129, 135
+  orig: 129, 135
+  offset: 0, 0
+  index: -1
+left arm
+  rotate: false
+  xy: 321, 10
+  size: 32, 86
+  orig: 32, 86
+  offset: 0, 0
+  index: -1
+left leg
+  rotate: false
+  xy: 263, 74
+  size: 55, 124
+  orig: 60, 124
+  offset: 0, 0
+  index: -1
+mawei
+  rotate: false
+  xy: 273, 313
+  size: 102, 80
+  orig: 102, 80
+  offset: 0, 0
+  index: -1
+right arm
+  rotate: false
+  xy: 355, 15
+  size: 29, 81
+  orig: 29, 81
+  offset: 0, 0
+  index: -1
+right leg
+  rotate: false
+  xy: 320, 98
+  size: 52, 121
+  orig: 52, 122
+  offset: 0, 1
+  index: -1
+yumao
+  rotate: true
+  xy: 184, 200
+  size: 160, 87
+  orig: 160, 87
+  offset: 0, 0
+  index: -1
+zhuzi
+  rotate: false
+  xy: 2, 14
+  size: 164, 40
+  orig: 165, 40
+  offset: 1, 0
+  index: -1
