@@ -26,7 +26,7 @@ public class PlayerGo : MonoBehaviour
     
     [Header("动画名称配置")]
     [SerializeField] private string idleAnimName = "idle";      // 待机动画名
-    [SerializeField] private string runAnimName = "run";        // 跑步动画名
+    [SerializeField] private string walkAnimName = "walk";      // 移动动画名
     
     private string currentAnimName = "";            // 当前播放的动画名（防止重复设置）
     
@@ -216,8 +216,8 @@ public class PlayerGo : MonoBehaviour
         
         if (isMoving)
         {
-            // 移动时播放跑步动画
-            PlayAnimation(runAnimName, true);
+            // 移动时播放行走动画
+            PlayAnimation(walkAnimName, true);
         }
         else
         {
