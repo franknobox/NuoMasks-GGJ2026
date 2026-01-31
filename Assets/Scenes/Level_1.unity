@@ -1011,7 +1011,7 @@ MonoBehaviour:
   moveSpeed: 5
   skeletonAnimation: {fileID: 0}
   idleAnimName: idle
-  runAnimName: run
+  walkAnimName: walk
   maxHealth: 3
   invincibleDuration: 1
 --- !u!1 &603744317
