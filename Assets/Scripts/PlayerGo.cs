@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class PlayerGo : MonoBehaviour
     
     private Rigidbody2D rb;
     private Vector2 moveInput;
+    private bool movementEnabled = true;
     
     #endregion
     
@@ -37,6 +39,10 @@ public class PlayerGo : MonoBehaviour
     [Header("=== 生命值系统 ===")]
     [SerializeField] private int maxHealth = 3;
     private int currentHealth;
+
+    public int CurrentHealth => currentHealth;
+    public int MaxHealth => maxHealth;
+    public event Action<int, int> OnHealthChanged; // (current, max)
     
     [Header("无敌帧设置")]
     [SerializeField] private float invincibleDuration = 1f; // 无敌时间
@@ -98,6 +104,7 @@ public class PlayerGo : MonoBehaviour
         
         // 初始化生命值
         currentHealth = maxHealth;
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
         
         // 调试检查
         if (rb == null)
@@ -141,10 +148,28 @@ public class PlayerGo : MonoBehaviour
     #region 移动逻辑 (Movement Logic)
     
     /// <summary>
+    /// 设置移动是否启用（对话等时可冻结）
+    /// </summary>
+    public void SetMovementEnabled(bool enabled)
+    {
+        movementEnabled = enabled;
+        if (!enabled)
+        {
+            moveInput = Vector2.zero;
+            if (rb != null) rb.velocity = Vector2.zero;
+        }
+    }
+    
+    /// <summary>
     /// 获取WASD输入
     /// </summary>
     private void GetInput()
     {
+        if (!movementEnabled)
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
         // 只有在Normal状态下才能移动
         if (currentState != PlayerState.Normal)
         {
@@ -171,6 +196,11 @@ public class PlayerGo : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        if (!movementEnabled)
+        {
+            if (rb != null) rb.velocity = Vector2.zero;
+            return;
+        }
         if (rb == null) return;
         
         // 计算目标位置
@@ -267,6 +297,8 @@ public class PlayerGo : MonoBehaviour
         
         // 扣血
         currentHealth -= damage;
+        currentHealth = Mathf.Max(0, currentHealth);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
         Debug.Log($"玩家受到 {damage} 点伤害，当前生命值: {currentHealth}/{maxHealth}");
         
         // 触发无敌帧
@@ -277,6 +309,16 @@ public class PlayerGo : MonoBehaviour
         {
             Die();
         }
+    }
+
+    /// <summary>
+    /// 回复生命值
+    /// </summary>
+    /// <param name="amount">回复量</param>
+    public void Heal(int amount)
+    {
+        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
     
     /// <summary>

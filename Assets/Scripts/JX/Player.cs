@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private Vector2 moveInput;
+    private bool movementEnabled = true;
     private Vector2 lastDirection = Vector2.down; // 记录最后朝向（默认向下）
     private string currentAnimation = ""; // 当前播放的动画名
 
@@ -35,8 +36,27 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 设置移动是否启用（对话等时可冻结）
+    /// </summary>
+    public void SetMovementEnabled(bool enabled)
+    {
+        movementEnabled = enabled;
+        if (!enabled)
+        {
+            moveInput = Vector2.zero;
+            if (rb != null) rb.velocity = Vector2.zero;
+        }
+    }
+
     void Update()
     {
+        if (!movementEnabled)
+        {
+            moveInput = Vector2.zero;
+            UpdateAnimation();
+            return;
+        }
         // 获取WASD输入
         float horizontal = 0f;
         float vertical = 0f;
@@ -54,6 +74,11 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!movementEnabled)
+        {
+            if (rb != null) rb.velocity = Vector2.zero;
+            return;
+        }
         // 使用Rigidbody2D移动
         rb.velocity = moveInput * moveSpeed;
     }
