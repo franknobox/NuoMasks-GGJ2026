@@ -38,11 +38,8 @@ public class HealthUI : MonoBehaviour
     {
         if (current < lastHealth)
         {
-            for (int i = current; i < lastHealth; i++)
-            {
-                if (i < hearts.Count)
-                    ApplyLoseHeart(hearts[i]);
-            }
+            // 依次播放失去生命的动画，每个图标之间有延迟
+            StartCoroutine(LoseHeartsSequentially(current, lastHealth));
         }
         if (current > lastHealth)
         {
@@ -53,7 +50,22 @@ public class HealthUI : MonoBehaviour
             }
         }
         lastHealth = current;
-        RefreshVisibility(current, max);
+    }
+    
+    /// <summary>
+    /// 依次播放失去生命的动画
+    /// </summary>
+    private IEnumerator LoseHeartsSequentially(int newHealth, int oldHealth)
+    {
+        for (int i = oldHealth - 1; i >= newHealth; i--)
+        {
+            if (i < hearts.Count)
+            {
+                ApplyLoseHeart(hearts[i]);
+                // 等待一小段时间再播放下一个动画
+                yield return new WaitForSeconds(0.15f);
+            }
+        }
     }
 
     private void UpdateHearts(int current, int max)

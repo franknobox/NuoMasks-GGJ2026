@@ -88,6 +88,13 @@ public class PlayerGo : MonoBehaviour
     
     #endregion
     
+    #region 钥匙系统 (Key System)
+    
+    [Header("=== 钥匙系统 ===")]
+    public bool hasDoorKey = false;  // 是否拥有门钥匙
+    
+    #endregion
+    
     #region 状态机桩 (State Machine Stub)
     
     [Header("=== 状态机 ===")]
@@ -388,9 +395,16 @@ public class PlayerGo : MonoBehaviour
     {
         Debug.Log("玩家死亡！");
         
-        // TODO: 后续添加死亡动画、重生逻辑等
-        // 暂时禁用移动
+        // 禁用移动
         currentState = PlayerState.Attacking; // 临时用攻击状态阻止移动
+        
+        // TODO: 后续添加死亡动画、重生逻辑等
+        
+        // 显示游戏结束画面
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ShowGameEnd();
+        }
     }
     
     #endregion
