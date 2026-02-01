@@ -20,7 +20,11 @@ public class ChaserEnemy : EnemyBase
     
     #region 朝向控制
     
-    private SpriteRenderer spriteRenderer;                  // 精灵渲染器（用于翻转）
+    [Header("=== 朝向设置 ===")]
+    [SerializeField] private bool useTransformFlip = true;  // 使用Transform翻转（适合帧动画）
+    
+    private SpriteRenderer spriteRenderer;                  // 精灵渲染器（用于Sprite翻转）
+    private Transform visualTransform;                      // 视觉对象Transform（用于帧动画翻转）
     
     #endregion
     
@@ -38,7 +42,35 @@ public class ChaserEnemy : EnemyBase
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
         
-        if (spriteRenderer == null)
+        // 如果使用Transform翻转，获取视觉对象的Transform
+        if (useTransformFlip)
+        {
+            // 优先使用子对象（通常帧动画在子对象上）
+            if (spriteRenderer != null)
+            {
+                visualTransform = spriteRenderer.transform;
+            }
+            else
+            {
+                // 如果没有SpriteRenderer，尝试查找名为"Visual"或"Sprite"的子对象
+                Transform visual = transform.Find("Visual");
+                if (visual == null) visual = transform.Find("Sprite");
+                if (visual == null) visual = transform.Find("Animator");
+                
+                if (visual != null)
+                {
+                    visualTransform = visual;
+                }
+                else
+                {
+                    // 使用自身Transform
+                    visualTransform = transform;
+                }
+            }
+            
+            Debug.Log($"{gameObject.name} 使用Transform翻转模式，目标对象: {visualTransform.name}");
+        }
+        else if (spriteRenderer == null)
         {
             Debug.LogWarning($"{gameObject.name} 未找到SpriteRenderer组件，无法翻转朝向");
         }
@@ -103,20 +135,53 @@ public class ChaserEnemy : EnemyBase
     /// <param name="direction">移动方向</param>
     private void UpdateFacing(Vector2 direction)
     {
-        if (spriteRenderer == null) return;
+        // 判断朝向（左或右）
+        bool facingRight = direction.x > 0.01f;
+        bool facingLeft = direction.x < -0.01f;
         
-        // 根据X轴方向翻转Sprite
-        if (direction.x > 0.01f)
+        // 如果X方向接近0，不改变朝向
+        if (!facingRight && !facingLeft)
         {
-            // 向右移动 - 不翻转
-            spriteRenderer.flipX = false;
+            return;
         }
-        else if (direction.x < -0.01f)
+        
+        // 根据模式选择翻转方式
+        if (useTransformFlip)
         {
-            // 向左移动 - 翻转
-            spriteRenderer.flipX = true;
+            // 方式1：使用Transform的Scale翻转（适合帧动画）
+            if (visualTransform != null)
+            {
+                Vector3 scale = visualTransform.localScale;
+                
+                if (facingRight)
+                {
+                    // 向右 - Scale.x为正
+                    scale.x = Mathf.Abs(scale.x);
+                }
+                else if (facingLeft)
+                {
+                    // 向左 - Scale.x为负
+                    scale.x = -Mathf.Abs(scale.x);
+                }
+                
+                visualTransform.localScale = scale;
+            }
         }
-        // 如果direction.x接近0，保持当前朝向不变
+        else
+        {
+            // 方式2：使用SpriteRenderer的FlipX翻转（适合单张Sprite）
+            if (spriteRenderer != null)
+            {
+                if (facingRight)
+                {
+                    spriteRenderer.flipX = false;
+                }
+                else if (facingLeft)
+                {
+                    spriteRenderer.flipX = true;
+                }
+            }
+        }
     }
     
     #endregion
@@ -131,23 +196,44 @@ public class ChaserEnemy : EnemyBase
         base.OnTakeDamage();
         
         // 播放受击闪烁效果
-        if (spriteRenderer != null)
-        {
-            StartCoroutine(FlashRed());
-        }
+        StartCoroutine(FlashRed());
     }
     
     /// <summary>
     /// 红色闪烁协程
+    /// 支持多种渲染器：SpriteRenderer, Spine, Animator等
     /// </summary>
     private IEnumerator FlashRed()
     {
-        Color originalColor = spriteRenderer.color;
-        spriteRenderer.color = Color.red;
+        // 获取所有可能的渲染器组件
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
         
+        if (spriteRenderers.Length == 0)
+        {
+            Debug.LogWarning($"{gameObject.name} 没有找到SpriteRenderer组件，无法显示受击特效");
+            yield break;
+        }
+        
+        // 保存原始颜色
+        Color[] originalColors = new Color[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            originalColors[i] = spriteRenderers[i].color;
+            // 变红
+            spriteRenderers[i].color = Color.red;
+        }
+        
+        // 等待0.1秒
         yield return new WaitForSeconds(0.1f);
         
-        spriteRenderer.color = originalColor;
+        // 恢复原始颜色
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            if (spriteRenderers[i] != null) // 防止对象被销毁
+            {
+                spriteRenderers[i].color = originalColors[i];
+            }
+        }
     }
     
     #endregion
