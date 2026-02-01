@@ -54,7 +54,22 @@ public class PlayerGo : MonoBehaviour
     #region 面具能力系统 (Mask Capabilities)
     
     [Header("=== 面具系统 ===")]
+    public MaskType currentMask = MaskType.None;            // 当前装备的面具
     private HashSet<MaskType> unlockedMasks = new HashSet<MaskType>();
+    
+    [Header("=== 面具视觉 ===")]
+    public SpriteRenderer maskRenderer;                     // 面具渲染器（FaceMask子物体）
+    public Sprite qiongqiSprite;                            // 穷奇面具图片
+    public Sprite tenggenSprite;                            // 腾根面具图片
+    
+    [Header("=== 腾根面具攻击 ===")]
+    public GameObject rootProjectilePrefab;                 // 树根子弹预制体
+    public float attackSpeed = 8f;                         // 树根飞行速度
+    public int attackDamage = 1;                            // 树根伤害值
+    public float attackCooldown = 0.5f;                     // 攻击冷却时间（秒）
+    public Transform firePoint;                             // 发射点（可选，不设置则从玩家中心发射）
+    
+    private float nextAttackTime = 0f;                      // 下次可以攻击的时间
     
     /// <summary>
     /// 面具类型枚举
@@ -63,13 +78,13 @@ public class PlayerGo : MonoBehaviour
     {
         None,       // 无面具
         Qiongqi,    // 穷奇面具（抗毒）
-        Tenggen     // 藤根面具（攻击）
+        Tenggen     // 腾根面具（攻击）
     }
     
     /// <summary>
     /// 是否能抵抗毒素（穷奇面具能力）
     /// </summary>
-    public bool CanResistPoison => HasMask(MaskType.Qiongqi);
+    public bool CanResistPoison => currentMask == MaskType.Qiongqi;
     
     #endregion
     
@@ -122,6 +137,9 @@ public class PlayerGo : MonoBehaviour
             PlayAnimation(idleAnimName, true);
         }
         
+        // 初始化面具视觉（确保初始状态正确）
+        UpdateMaskVisual();
+        
         Debug.Log($"玩家初始化完成 - 生命值: {currentHealth}/{maxHealth}");
     }
     
@@ -129,6 +147,22 @@ public class PlayerGo : MonoBehaviour
     {
         // 获取输入
         GetInput();
+        
+        // 检测面具切换输入
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            SwitchMask();
+        }
+        
+        // 检测腾根面具攻击输入（鼠标左键）
+        // 必须满足：装备腾根面具 + 按下鼠标左键 + 冷却时间已过
+        if (Input.GetMouseButtonDown(0) && 
+            currentMask == MaskType.Tenggen && 
+            Time.time >= nextAttackTime)
+        {
+            FireRootAttack();
+            nextAttackTime = Time.time + attackCooldown; // 更新下次攻击时间
+        }
         
         // 更新动画状态
         UpdateAnimation();
@@ -380,7 +414,7 @@ public class PlayerGo : MonoBehaviour
                     Debug.Log("获得穷奇面具 - 现在可以抵抗毒素！");
                     break;
                 case MaskType.Tenggen:
-                    Debug.Log("获得藤根面具 - 现在可以使用攻击能力！");
+                    Debug.Log("获得腾根面具 - 现在可以使用攻击能力！");
                     break;
             }
         }
@@ -400,6 +434,138 @@ public class PlayerGo : MonoBehaviour
         return unlockedMasks.Contains(mask);
     }
     
+    /// <summary>
+    /// 切换面具（按Q键）
+    /// </summary>
+    private void SwitchMask()
+    {
+        try
+        {
+            Debug.Log($"[{Time.frameCount}] 按下Q键，开始切换面具...");
+            
+            // 定义面具切换顺序：None -> Qiongqi -> Tenggen -> None
+            MaskType[] maskOrder = new MaskType[]
+            {
+                MaskType.None,
+                MaskType.Qiongqi,
+                MaskType.Tenggen
+            };
+            
+            Debug.Log("步骤1: 数组创建成功");
+            
+            // 手动查找当前面具在顺序中的索引
+            int currentIndex = -1;
+            for (int j = 0; j < maskOrder.Length; j++)
+            {
+                if (maskOrder[j] == currentMask)
+                {
+                    currentIndex = j;
+                    break;
+                }
+            }
+            
+            Debug.Log($"步骤2: 切换前: 当前面具={currentMask}, 索引={currentIndex}");
+            
+            // 如果找不到当前面具（异常情况），从头开始
+            if (currentIndex == -1)
+            {
+                Debug.LogWarning("当前面具未在列表中找到，重置为None");
+                currentIndex = 0;
+                currentMask = MaskType.None;
+            }
+            
+            Debug.Log("步骤3: 开始循环查找");
+            
+            // 从下一个面具开始尝试，最多尝试所有面具一遍
+            for (int i = 0; i < maskOrder.Length; i++)
+            {
+                // 计算下一个索引（循环）
+                currentIndex = (currentIndex + 1) % maskOrder.Length;
+                MaskType nextMask = maskOrder[currentIndex];
+                
+                Debug.Log($"尝试第{i+1}次: 索引={currentIndex}, 面具={nextMask}, 已解锁={HasMask(nextMask)}");
+                
+                // 检查是否可以切换到这个面具
+                // None总是可用，其他面具需要检查是否已解锁
+                if (nextMask == MaskType.None || HasMask(nextMask))
+                {
+                    // 切换成功
+                    currentMask = nextMask;
+                    
+                    // 更新面具视觉
+                    UpdateMaskVisual();
+                    
+                    // 打印当前面具
+                    string maskName = GetMaskDisplayName(currentMask);
+                    Debug.Log($"<color=cyan>✓ 切换成功！当前面具: {maskName}</color>");
+                    
+                    // TODO: 播放切换音效
+                    // TODO: 播放切换动画/特效
+                    
+                    return;
+                }
+            }
+            
+            // 如果所有面具都不可用（理论上不会发生，因为None总是可用）
+            Debug.LogWarning("没有可用的面具");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"切换面具时发生错误: {e.Message}\n{e.StackTrace}");
+        }
+    }
+    
+    /// <summary>
+    /// 获取面具的显示名称（中文）
+    /// </summary>
+    /// <param name="mask">面具类型</param>
+    /// <returns>中文名称</returns>
+    private string GetMaskDisplayName(MaskType mask)
+    {
+        switch (mask)
+        {
+            case MaskType.None:
+                return "无面具";
+            case MaskType.Qiongqi:
+                return "穷奇面具";
+            case MaskType.Tenggen:
+                return "腾根面具";
+            default:
+                return mask.ToString();
+        }
+    }
+    
+    /// <summary>
+    /// 更新面具视觉显示
+    /// </summary>
+    private void UpdateMaskVisual()
+    {
+        // 检查maskRenderer是否存在
+        if (maskRenderer == null)
+        {
+            return; // 没有面具渲染器，直接返回
+        }
+        
+        // 根据当前面具类型设置对应的Sprite
+        switch (currentMask)
+        {
+            case MaskType.None:
+                // 无面具 - 隐藏面具
+                maskRenderer.sprite = null;
+                break;
+                
+            case MaskType.Qiongqi:
+                // 穷奇面具
+                maskRenderer.sprite = qiongqiSprite;
+                break;
+                
+            case MaskType.Tenggen:
+                // 腾根面具
+                maskRenderer.sprite = tenggenSprite;
+                break;
+        }
+    }
+    
     #endregion
     
     #region 攻击逻辑桩 (Attack Stub)
@@ -409,10 +575,10 @@ public class PlayerGo : MonoBehaviour
     /// </summary>
     public void Attack()
     {
-        // 检查是否拥有藤根面具
+        // 检查是否拥有腾根面具
         if (!HasMask(MaskType.Tenggen))
         {
-            Debug.Log("需要藤根面具才能攻击！");
+            Debug.Log("需要腾根面具才能攻击！");
             return;
         }
         
@@ -421,6 +587,50 @@ public class PlayerGo : MonoBehaviour
         
         // 切换到攻击状态（预留）
         // currentState = PlayerState.Attacking;
+    }
+    
+    /// <summary>
+    /// 发射树根攻击（腾根面具能力）
+    /// </summary>
+    private void FireRootAttack()
+    {
+        // 检查是否有树根子弹预制体
+        if (rootProjectilePrefab == null)
+        {
+            Debug.LogError("未设置树根子弹预制体！请在Inspector中赋值 rootProjectilePrefab");
+            return;
+        }
+        
+        // 获取鼠标在世界空间的位置
+        // 重要：需要设置正确的Z坐标，否则转换会出错
+        Vector3 mouseScreenPos = Input.mousePosition;
+        mouseScreenPos.z = Camera.main.transform.position.z * -1; // 相机到玩家平面的距离
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+        
+        // 计算从玩家到鼠标的方向向量（归一化）
+        Vector2 direction = (mousePos - (Vector2)transform.position).normalized;
+        
+        // 确定发射位置
+        // 优先使用firePoint，否则使用玩家位置
+        Vector3 spawnPosition = firePoint != null ? firePoint.position : transform.position;
+        
+        // 调试：打印发射位置
+        Debug.Log($"子弹生成位置: {spawnPosition} | 玩家位置: {transform.position} | 使用FirePoint: {firePoint != null}");
+        
+        // 生成树根子弹
+        GameObject rootObj = Instantiate(rootProjectilePrefab, spawnPosition, Quaternion.identity);
+        
+        // 获取RootProjectile组件并初始化
+        RootProjectile rootScript = rootObj.GetComponent<RootProjectile>();
+        if (rootScript != null)
+        {
+            rootScript.Initialize(direction, attackSpeed, attackDamage);
+        }
+        else
+        {
+            Debug.LogError("树根子弹预制体上没有RootProjectile组件！");
+            Destroy(rootObj);
+        }
     }
     
     #endregion
@@ -446,9 +656,9 @@ public class PlayerGo : MonoBehaviour
     }
     
     /// <summary>
-    /// 测试解锁藤根面具（仅用于调试）
+    /// 测试解锁腾根面具（仅用于调试）
     /// </summary>
-    [ContextMenu("解锁藤根面具")]
+    [ContextMenu("解锁腾根面具")]
     private void TestUnlockTenggen()
     {
         UnlockMask(MaskType.Tenggen);

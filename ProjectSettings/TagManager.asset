@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Mask
+  - Poison
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - walls
   - poison
   - enemy
-  - 
+  - object
   - 
   - 
   - 
@@ -41,4 +43,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 4286223583
+    locked: 0
+  - name: Front
+    uniqueID: 4225993793
     locked: 0
