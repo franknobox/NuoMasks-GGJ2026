@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 游戏管理器 - 单例模式
@@ -81,6 +82,30 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1f;
+    }
+
+    /// <summary>
+    /// 复活/重试：恢复时间、隐藏结束画面、重载当前场景。
+    /// 用于死亡界面“复活/重试”按钮。
+    /// </summary>
+    public void Respawn()
+    {
+        ResumeGame();
+        if (endScreenImage != null)
+            endScreenImage.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    /// <summary>
+    /// 返回主菜单：恢复时间、隐藏结束画面、加载指定场景。
+    /// </summary>
+    /// <param name="menuSceneName">主菜单场景名，默认 "scene0"</param>
+    public void ReturnToMenu(string menuSceneName = "scene0")
+    {
+        ResumeGame();
+        if (endScreenImage != null)
+            endScreenImage.SetActive(false);
+        SceneManager.LoadScene(menuSceneName);
     }
     
     private void OnDestroy()

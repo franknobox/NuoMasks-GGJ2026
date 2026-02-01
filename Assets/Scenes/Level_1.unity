@@ -561,7 +561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueBox: {fileID: 1790547548}
-  dialogueText: {fileID: 0}
+  dialogueText: {fileID: 524917648}
   nameText: {fileID: 0}
   dialogueLines: []
   currentLine: 0
@@ -12248,7 +12248,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.387043, y: 7.50379, z: -10}
+  m_LocalPosition: {x: -17.388803, y: 7.5038, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12621,8 +12621,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -361, y: 50}
-  m_SizeDelta: {x: 232.9588, y: 99.4846}
+  m_AnchoredPosition: {x: 2.2888, y: 0.7457}
+  m_SizeDelta: {x: 959.5365, y: 197.9931}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &524917648
 MonoBehaviour:
@@ -12724,6 +12724,134 @@ MonoBehaviour:
   zPosition: 1
   overrideAlpha: 1
   hierarchy: {fileID: 609812052}
+--- !u!1 &582028612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 582028614}
+  - component: {fileID: 582028613}
+  m_Layer: 0
+  m_Name: music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &582028613
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582028612}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: b831ae1645b7c5c4fbfb56fa6b1c3d06, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &582028614
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582028612}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 612.51996, y: 374.66116, z: -7.9156404}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &602446266
 GameObject:
   m_ObjectHideFlags: 0
@@ -20347,7 +20475,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 47.5, y: -25.6}
+  m_AnchoredPosition: {x: 47.5, y: -25.599976}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1346493096
@@ -31659,7 +31787,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1790547549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125167,7 +125295,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e73f21d38bb51b3489822294eba3eb26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  introLines: []
+  introLines:
+  - "\u6211\u7ECF\u8425\u7740\u4E00\u5BB6\u7237\u7237\u4F20\u627F\u4E0B\u6765\u7684\u50A9\u9762\u5E97\u94FA\uFF0C\u5E97\u5185\u4F9B\u5949\u53E4\u8001\u5341\u4E8C\u50A9\u9762"
+  - "\u50A9\uFF0C\u795E\u53E8\u6C11\u4FD7\u821E\u8E48\u7F62\u4E86"
+  - "\u81F3\u4E8E\u80FD\u591F\u9A71\u9010\u90AA\u795F\uFF0C\u4E5F\u5C31\u53EA\u6709\u7237\u7237\u4F1A\u4FE1"
+  - "\u8D5B\u535A\u65F6\u4EE3\uFF0C\u50A9\u5DF2\u5F0F\u5FAE"
+  - "\u76F4\u5230\u6709\u4E00\u5929\uFF0C\u5341\u4E00\u4E2A\u50A9\u9762\u4E0D\u7FFC\u800C\u98DE"
+  - "\u800C\u6211\u5374\u5947\u8FF9\u822C\u5730\u62E5\u6709\u4E86\u80FD\u591F\u501F\u52A9\u50A9\u9762\u529B\u91CF\u7684\u8EAB\u4F53"
+  - "\u795E\uFF0C\u5728\u51A5\u51A5\u4E2D\u5F15\u9886\u6211\uFF0C\u53BB\u5BFB\u56DE\u90A3\u4E9B\u5931\u843D\u7684\u50A9\u9762\u2026\u2026"
+  - "\u5173\u4E8E\u5982\u4F55\u5BFB\u627E\u5B83\u4EEC\uFF0C\u6211\u6BEB\u65E0\u5934\u7EEA"
+  - "\u76F4\u5230\u51E0\u5929\u524D"
+  - "\u6211\u5728\u7237\u7237\u7684\u65E7\u7269\u4E2D\u53D1\u73B0\u4E00\u4E2A\u6545\u969C\u7684\u7F57\u76D8"
+  - "\u5B83\u7684\u6307\u9488\u75AF\u72C2\u8F6C\u52A8\uFF0C\u6700\u7EC8\u5728\u67D0\u4E2A\u65B9\u5411\u505C\u4E0B"
+  - "\u8FD9\u65F6\uFF0C\u6211\u624B\u4E2D\u552F\u4E00\u7559\u5B58\u4E0B\u6765\u7684\u4F2F\u5947\u50A9\u9762\uFF0C\u53D1\u51FA\u4E00\u4E1D\u5149\u4EAE"
+  - "\u8DDF\u968F\u7F57\u76D8\u7684\u6307\u5F15\uFF0C\u6211\u6765\u5230\u8FD9\u6761\u4F4D\u4E8E\u975E\u6CD5\u6392\u6C61\u533A\u7684\u70C2\u5DF7"
+  - "\u5730\u8868\u7531\u65E0\u6570\u62A5\u5E9F\u7535\u8DEF\u677F\u3001\u4E49\u80A2\u788E\u7247\u548C\u6709\u673A\u5783\u573E\u538B\u7F29\u800C\u6210"
+  - "\u5806\u79EF\u7740\u5927\u91CF\u5E9F\u5F03\u94C1\u7BA1\uFF0C\u88AB\u53D1\u9ED1\u7684\u7EFF\u6C34\u6D78\u6CE1\u800C\u9508\u8FF9\u6591\u6591\uFF0C\u5448\u73B0\u51FA\u8840\u8272\u7684\u7EA2"
+  - "\u8FDC\u5904\uFF0C\u662F\u6DF1\u4E0D\u53EF\u6D4B\u7684\u9ED1\u6697"
   speakerName: 
   playOncePerRun: 1
   dialogueManager: {fileID: 90983868}
@@ -125593,3 +125737,4 @@ SceneRoots:
   - {fileID: 1387925660}
   - {fileID: 239229300}
   - {fileID: 1708273748}
+  - {fileID: 582028614}
